@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container mt-12>
     <v-layout
       text-center
       wrap
@@ -14,9 +14,9 @@
       </v-flex>
 
       <v-flex mb-4>
-        <h1 class="display-2 font-weight-bold mb-3">
+        <h2 class="display-2 font-weight-bold mb-3">
           MEMORY ROAD
-        </h1>
+        </h2>
         <div class="my-2">
           <v-btn rounded x-large color="info" dark @click="playGame">
             JUGAR

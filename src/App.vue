@@ -48,7 +48,8 @@
       <Configuration
         v-if="showConfig"
         :config="config"
-        :players="players" />
+        :players="players"
+        :modal="modalMeme" />
       <Home
         v-if="!showConfig && !play"
         @playGame="started"/>
@@ -118,27 +119,75 @@ export default {
       title: '',
       image: '',
       turn: false,
-      time: 2500
+      isWinner: false,
+      time: 3500
     },
     modalTurn: {
       dialog: false,
       title: '',
       image: '',
       turn: false,
+      isWinner: false,
       time: 1500
     },
     correctImages: [
       '3gIIVTrVoacyBdLtfh',
       '8m7QYk0LVfQ1n4cXbc',
       'TEUxtCqq5aa2s',
-      'AgrfqPt5AyiTm'
+      'AgrfqPt5AyiTm',
+      'XbxZ41fWLeRECPsGIJ',
+      'fLpP1CZyzFckyy5bML',
+      '8Fxlp25ov2RCGwye9I',
+      'QJsP0cTAJhg7O47ub2',
+      '2aPePPqpAf5jwjtt2p',
+      'TgFibAJdezKXUYsddv',
+      'Nmiaz28CS7T3jhIe9K',
+      'MfKSNCNqudSE0',
+      'X8czYMb8gPPPu3USXv',
+      '4Nrxg6Cp6u9MMkxKgu',
+      'S2w7v6v1Qmy2nusJO5',
+      '1Bg837HL6HyjiJWp3R',
+      'bznNJlqAi4pBC',
+      'iAm3b28WTqaHe',
+      'dXhxtHSlo95MlfMR9j',
+      'Z5qJVWJSXdGzm',
+      'zpZMHnDdTS4PS',
+      '10xZU9b7JBx14s',
+      'ZU9QbQtuI4Xcc',
+      '11ISwbgCxEzMyY',
+      'diUKszNTUghVe',
+      'RIhNQOjGa39Ze',
+      '1gqDQUaLe3mCc',
+      'VHwgHhJLuWt0gjjUzf',
+      'LML5ldpTKLPelFtBfY',
+      'Loyn98mvzdWfe',
+      'w4hyiTjWa9iXm',
+      'uTY9YvXryUtpaNaDiG',
+      'l44Q6Etd5kdSGttXa'
     ],
     incorrectImages: [
       '3s298sv3aevOC4fktQ',
       'Xb7VXx9yEzvtlFEM71',
       'S9Egk23jFzLLtfur56',
       'BcPfTUCqYZSL5NZC0p',
-      'bnN5dDIiuuJ4A'
+      'bnN5dDIiuuJ4A',
+      'gvOqQdFq9unPG',
+      'ZrkWh5DCKQPTy',
+      'l2JhtKtDWYNKdRpoA',
+      'loKoRwzBQi1K8',
+      'fmJwUINtn2Odi',
+      'sT1K7rkPJOwh2',
+      'cvVIHUOKtYeNW',
+      '14nvd5FCcDpFlu',
+      'sUzZwE9AgI8iA',
+      '6xgslyYQCyLa8',
+      'pScTZ7mTJ1Udi',
+      '5N6FWdDKKyqOI',
+      'l0HlCqV35hdEg2GUo',
+      '7QxZfWnBLdGI8',
+      '7WlEkydlQEi0o',
+      'jquDWJfPUMCiI',
+      'zXeX29w6jxjAk'
     ],
     audioOn: true,
     audio: null,
@@ -148,7 +197,7 @@ export default {
       this.play = e;
       this.buildRoad();
       this.backgroundSound();
-      this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true);
+      this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true, false);
       this.blinkModal(this.modalTurn, this.modalTurn.time);
     },
     buildRoad() {
@@ -185,23 +234,23 @@ export default {
           this.correctSound();
           this.forward(player, square);
           if (this.playerWin(player)) {
-            this.setupModalMeme(`GANADOR\n'${player.name}'`, this.randomImage(this.correctImages), false);
+            this.setupModalMeme(`'${player.name}'`, this.randomImage(this.correctImages), false, true);
             if (this.audioOn && this.audio) {
               this.audio.pause();
               this.winnerSound();
             }
           } else {
-            this.setupModalMeme('¡¡CORRECTO!!', this.randomImage(this.correctImages), false);
+            this.setupModalMeme('¡¡CORRECTO!!', this.randomImage(this.correctImages), false, false);
             this.blinkModal(this.modalMeme, this.modalMeme.time);
           }
         } else {
           square.color = 'red darken-1';
           this.resetPosition(player);
           this.incorrectSound();
-          this.setupModalMeme('¡¡INCORRECTO!!', this.randomImage(this.incorrectImages), false);
+          this.setupModalMeme('¡¡INCORRECTO!!', this.randomImage(this.incorrectImages), false, false);
           this.blinkModal(this.modalMeme, this.modalMeme.time);
           this.turn = !this.turn;
-          this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true);
+          this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true, false);
           this.blinkModal(this.modalTurn, this.modalTurn.time);
         }
         this.blinkColor(square, currentColor);
@@ -209,7 +258,7 @@ export default {
         /* eslint-disable no-console */
         square.color = 'red darken-1';
         this.incorrectSound();
-        this.setupModalMeme('NO ESTÁ PERMITIDO!!', this.randomImage(this.incorrectImages), false);
+        this.setupModalMeme('NO ESTÁ PERMITIDO!!', this.randomImage(this.incorrectImages), false, false);
         this.blinkModal(this.modalMeme, this.modalMeme.time);
         this.blinkColor(square, currentColor);
         console.log(`Avance no permitido`);
@@ -243,6 +292,7 @@ export default {
       let vm = this;
       setTimeout(() => {
         vm.audio.play();
+        error.pause();
       }, this.modalMeme.time);
     },
     winnerSound() {
@@ -265,17 +315,19 @@ export default {
         modal.dialog = false;
       }, time);
     },
-    setupModalMeme(title, image, turn) {
+    setupModalMeme(title, image, turn, isWinner) {
       this.modalMeme.dialog = true;
       this.modalMeme.title = title;
       this.modalMeme.image = image;
       this.modalMeme.turn = turn;
+      this.modalMeme.isWinner = isWinner;
     },
-    setupModalTurn(title, image, turn) {
+    setupModalTurn(title, image, turn, isWinner) {
       this.modalTurn.dialog = true;
       this.modalTurn.title = title;
       this.modalTurn.image = image;
       this.modalTurn.turn = turn;
+      this.modalTurn.isWinner = isWinner;
     },
     resetPosition(player) {
       player.position.x = -1;

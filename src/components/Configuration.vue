@@ -21,6 +21,18 @@
             thumb-label="always"
           >
           </v-slider>
+
+          <v-subheader class="pl-0">Tiempo que se muestra la imagen. (1 segundo = 1000)</v-subheader>
+          <v-slider
+            v-model="modal.time"
+            class="align-center"
+            max="5000"
+            min="1000"
+            hide-details
+            thumb-label="always"
+          >
+          </v-slider>
+
           <v-switch
             v-model="config.showPlayers"
             :label="`Mostrar Jugadores`"
@@ -84,7 +96,7 @@
 
 <script>
 export default {
-  props: ['config', 'players'],
+  props: ['config', 'players', 'modal'],
   data() {
     return {
       mode: 'hexa'

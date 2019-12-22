@@ -7,6 +7,7 @@
     >
       <v-card>
         <h2 class="display-2 pa-2 text-center" v-if="modal.turn">TURNO DE:</h2>
+        <h2 class="display-2 pa-2 text-center" v-if="modal.isWinner">GANADOR</h2>
         <h2 class="display-3 pa-2 text-center">{{ modal.title }}</h2>
         <v-card-text v-if="!modal.turn" class="pa-0">
           <div v-if="modal.image" style="width:100%;height:0;padding-bottom:100%;position:relative;">
