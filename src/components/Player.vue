@@ -1,5 +1,5 @@
 <template>
-  <v-avatar class="player" color="orange" size="80">
+  <v-avatar class="player" :style="{backgroundColor: player.color}" size="80">
     <span class="white--text headline">{{ player.name }}</span>
   </v-avatar>
 </template>

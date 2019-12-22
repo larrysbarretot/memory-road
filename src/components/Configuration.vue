@@ -42,7 +42,7 @@
                 <v-color-picker
                   v-model="players[1].color"
                   :hide-canvas="true"
-                  :hide-inputs="true"
+                  :hide-inputs="false"
                   :hide-mode-switch="true"
                   :mode.sync="mode"
                   :show-swatches="false"
@@ -67,7 +67,7 @@
                 <v-color-picker
                   v-model="players[2].color"
                   :hide-canvas="true"
-                  :hide-inputs="true"
+                  :hide-inputs="false"
                   :hide-mode-switch="true"
                   :mode.sync="mode"
                   :show-swatches="false"

@@ -10,13 +10,14 @@
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="@/assets/lab-logo.png"
           transition="scale-transition"
-          width="40"
+          width="70"
         />
 
-        <v-toolbar-title>LAB</v-toolbar-title>
+        <!-- <v-toolbar-title>LAB</v-toolbar-title> -->
       </div>
+      
       <v-spacer></v-spacer>
       <v-btn
         class="mx-2"
@@ -28,6 +29,7 @@
         @click="restart">
         <v-icon>mdi-restart</v-icon>
       </v-btn>
+
       <v-spacer></v-spacer>
 
       <v-switch
@@ -56,7 +58,8 @@
         :players="players"
         :showPlayers="config.showPlayers"
         @stepPressed="stepped" />
-      <Modal :modal="modal" />
+      <Modal :modal="modalMeme" />
+      <Modal :modal="modalTurn" />
     </v-content>
   </v-app>
 </template>
@@ -90,7 +93,7 @@ export default {
     players: {
       1: {
         name: 'Elí',
-        color: '#82F70C',
+        color: '#0CB2F7',
         position: {
           x: -1,
           y: -1
@@ -110,10 +113,19 @@ export default {
     play: false,
     squares: [],
     turn: true,
-    modal: {
+    modalMeme: {
       dialog: false,
       title: '',
-      image: ''
+      image: '',
+      turn: false,
+      time: 2500
+    },
+    modalTurn: {
+      dialog: false,
+      title: '',
+      image: '',
+      turn: false,
+      time: 1500
     },
     correctImages: [
       '3gIIVTrVoacyBdLtfh',
@@ -127,13 +139,17 @@ export default {
       'S9Egk23jFzLLtfur56',
       'BcPfTUCqYZSL5NZC0p',
       'bnN5dDIiuuJ4A'
-    ]
+    ],
+    audioOn: true,
+    audio: null,
   }),
   methods: {
     started(e) {
       this.play = e;
       this.buildRoad();
       this.backgroundSound();
+      this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true);
+      this.blinkModal(this.modalTurn, this.modalTurn.time);
     },
     buildRoad() {
       let choice = Math.floor(Math.random() * 3);
@@ -169,27 +185,32 @@ export default {
           this.correctSound();
           this.forward(player, square);
           if (this.playerWin(player)) {
-            this.setupModal(`'${player.name}' es el GANADOR`, this.randomImage(this.correctImages));
+            this.setupModalMeme(`GANADOR\n'${player.name}'`, this.randomImage(this.correctImages), false);
+            if (this.audioOn && this.audio) {
+              this.audio.pause();
+              this.winnerSound();
+            }
           } else {
-            this.setupModal('¡¡CORRECTO!!', this.randomImage(this.correctImages));
-            this.blinkModal(this.modal);
+            this.setupModalMeme('¡¡CORRECTO!!', this.randomImage(this.correctImages), false);
+            this.blinkModal(this.modalMeme, this.modalMeme.time);
           }
         } else {
           square.color = 'red darken-1';
           this.resetPosition(player);
           this.incorrectSound();
-          this.setupModal('¡¡INCORRECTO!!', this.randomImage(this.incorrectImages));
-          this.blinkModal(this.modal);
+          this.setupModalMeme('¡¡INCORRECTO!!', this.randomImage(this.incorrectImages), false);
+          this.blinkModal(this.modalMeme, this.modalMeme.time);
           this.turn = !this.turn;
-          this.setupModal(`TURNO de ${this.turn ? this.players[1].name: this.players[2].name}`, '')
+          this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true);
+          this.blinkModal(this.modalTurn, this.modalTurn.time);
         }
         this.blinkColor(square, currentColor);
       } else {
         /* eslint-disable no-console */
         square.color = 'red darken-1';
         this.incorrectSound();
-        this.setupModal('NO ESTÁ PERMITIDO!!', this.randomImage(this.incorrectImages));
-        this.blinkModal(this.modal);
+        this.setupModalMeme('NO ESTÁ PERMITIDO!!', this.randomImage(this.incorrectImages), false);
+        this.blinkModal(this.modalMeme, this.modalMeme.time);
         this.blinkColor(square, currentColor);
         console.log(`Avance no permitido`);
         /* eslint-enable no-console */
@@ -213,25 +234,48 @@ export default {
       correct.play();
     },
     incorrectSound() {
-      const error = new Audio(require('@/assets/sounds/error.mp3'));
+      if (this.audio) {
+        this.audio.pause();
+      }
+      const numberError = Math.floor(Math.random() * 12 + 1);
+      const error = new Audio(require(`@/assets/sounds/error${numberError}.mp3`));
       error.play();
+      let vm = this;
+      setTimeout(() => {
+        vm.audio.play();
+      }, this.modalMeme.time);
+    },
+    winnerSound() {
+      const numberWinner = Math.floor(Math.random() * 3 + 1);
+      let winner = new Audio(require(`@/assets/sounds/win${numberWinner}.mp3`));
+      let youwin = new Audio(require('@/assets/sounds/youwin.mp3'));
+      youwin.play();
+      winner.play();
     },
     backgroundSound() {
-      const background = new Audio(require('@/assets/sounds/background.mp3'));
-      background.play();
+      this.audio = new Audio(require('@/assets/sounds/background.mp3'));
+      this.audio.loop = true;
+      this.audio.play();
     },
     randomImage(array) {
       return array[Math.floor(Math.random() * array.length)];
     },
-    blinkModal(modal) {
+    blinkModal(modal, time) {
       setTimeout(() => {
         modal.dialog = false;
-      }, 2500);
+      }, time);
     },
-    setupModal(title, image) {
-      this.modal.dialog = true;
-      this.modal.title = title;
-      this.modal.image = image;
+    setupModalMeme(title, image, turn) {
+      this.modalMeme.dialog = true;
+      this.modalMeme.title = title;
+      this.modalMeme.image = image;
+      this.modalMeme.turn = turn;
+    },
+    setupModalTurn(title, image, turn) {
+      this.modalTurn.dialog = true;
+      this.modalTurn.title = title;
+      this.modalTurn.image = image;
+      this.modalTurn.turn = turn;
     },
     resetPosition(player) {
       player.position.x = -1;
@@ -245,6 +289,7 @@ export default {
       this.squares = [];
       this.resetPosition(this.players[1]);
       this.resetPosition(this.players[2]);
+      this.audio.pause();
       this.started(true);
     }
   }
