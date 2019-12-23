@@ -6,14 +6,20 @@
       dark
     >
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="@/assets/lab-logo.png"
-          transition="scale-transition"
-          width="70"
-        />
+        <v-btn
+          tile
+          large
+          icon
+          href='./'>
+          <v-img
+            alt="Vuetify Logo"
+            class="shrink mr-2"
+            contain
+            src="@/assets/lab-logo.png"
+            transition="scale-transition"
+            width="65"
+          />
+        </v-btn>
       </div>
       
       <v-spacer></v-spacer>
@@ -118,7 +124,7 @@ export default {
       image: '',
       turn: false,
       isWinner: false,
-      time: 3500
+      time: 4000
     },
     modalTurn: {
       dialog: false,
@@ -126,7 +132,7 @@ export default {
       image: '',
       turn: false,
       isWinner: false,
-      time: 1500
+      time: 1700
     },
     correctImages: [
       '3gIIVTrVoacyBdLtfh',
@@ -224,9 +230,6 @@ export default {
       const player = this.turn ? this.players[1]: this.players[2];
       const currentColor = square.color;
       if (player.position.x === square.x - 1) {
-        /* eslint-disable no-console */
-        console.log(`Avance permitido`);
-        /* eslint-enable no-console */
         if (square.isSafe) {
           square.color = 'blue darken-1';
           this.correctSound();

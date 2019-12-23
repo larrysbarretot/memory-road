@@ -22,13 +22,14 @@
           >
           </v-slider>
 
-          <v-subheader class="pl-0">Tiempo que se muestra la imagen. (1 segundo = 1000)</v-subheader>
+          <v-subheader class="pl-0">Transición Imagen. (1 segundo = 1000)</v-subheader>
           <v-slider
             v-model="modal.time"
             class="align-center"
-            max="5000"
             min="1000"
-            hide-details
+            max="5000"
+            step="500"
+            ticks="always"
             thumb-label="always"
           >
           </v-slider>
