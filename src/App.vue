@@ -14,8 +14,6 @@
           transition="scale-transition"
           width="70"
         />
-
-        <!-- <v-toolbar-title>LAB</v-toolbar-title> -->
       </div>
       
       <v-spacer></v-spacer>
@@ -255,23 +253,15 @@ export default {
             vm.setupModalTurn(`${vm.turn ? vm.players[1].name: vm.players[2].name}`, '', true, false);
             vm.blinkModal(vm.modalTurn, vm.modalTurn.time);
           }, this.modalMeme.time);
-          //this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true, false);
-          //this.blinkModal(this.modalTurn, this.modalTurn.time);
         }
         this.blinkColor(square, currentColor);
       } else {
-        /* eslint-disable no-console */
         square.color = 'red darken-1';
         this.incorrectSound();
         this.setupModalMeme('NO ESTÁ PERMITIDO!!', this.randomImage(this.incorrectImages), false, false);
         this.blinkModal(this.modalMeme, this.modalMeme.time);
         this.blinkColor(square, currentColor);
-        //console.log(`Avance no permitido`);
-        /* eslint-enable no-console */
       }
-      /* eslint-disable no-console */
-      //console.log(`App: (${square.x}, ${square.y})`);
-      /* eslint-enable no-console */
     },
     blinkColor(square, color) {
       setTimeout(() => {

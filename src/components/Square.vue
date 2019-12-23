@@ -6,7 +6,6 @@
       :color="square.color"
       @click="selected"
     >
-      <!-- {{ square.x }} {{ square.y }} -->
       <slot></slot>
     </v-card>
   </v-col>
@@ -17,9 +16,6 @@ export default {
   props: ['square'],
   methods: {
     selected() {
-      /* eslint-disable no-console */
-      //console.log(`Seleccionado: (${this.square.x}, ${this.square.y})`);
-      /* eslint-enable no-console */
       this.$emit('selected', this.square);
     }
   }
