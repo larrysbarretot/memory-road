@@ -44,7 +44,7 @@ export default {
     playGame() {
       /* eslint-disable no-console */
       this.$emit('playGame', true);
-      console.log('play');
+      //console.log('play');
       /* eslint-enable no-console */
     }
   }

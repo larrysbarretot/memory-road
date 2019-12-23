@@ -250,8 +250,13 @@ export default {
           this.setupModalMeme('¡¡INCORRECTO!!', this.randomImage(this.incorrectImages), false, false);
           this.blinkModal(this.modalMeme, this.modalMeme.time);
           this.turn = !this.turn;
-          this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true, false);
-          this.blinkModal(this.modalTurn, this.modalTurn.time);
+          let vm = this;
+          setTimeout(() => {
+            vm.setupModalTurn(`${vm.turn ? vm.players[1].name: vm.players[2].name}`, '', true, false);
+            vm.blinkModal(vm.modalTurn, vm.modalTurn.time);
+          }, this.modalMeme.time);
+          //this.setupModalTurn(`${this.turn ? this.players[1].name: this.players[2].name}`, '', true, false);
+          //this.blinkModal(this.modalTurn, this.modalTurn.time);
         }
         this.blinkColor(square, currentColor);
       } else {
@@ -261,11 +266,11 @@ export default {
         this.setupModalMeme('NO ESTÁ PERMITIDO!!', this.randomImage(this.incorrectImages), false, false);
         this.blinkModal(this.modalMeme, this.modalMeme.time);
         this.blinkColor(square, currentColor);
-        console.log(`Avance no permitido`);
+        //console.log(`Avance no permitido`);
         /* eslint-enable no-console */
       }
       /* eslint-disable no-console */
-      console.log(`App: (${square.x}, ${square.y})`);
+      //console.log(`App: (${square.x}, ${square.y})`);
       /* eslint-enable no-console */
     },
     blinkColor(square, color) {

@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="4" md="4">
+  <v-col cols="4">
     <v-card
       class="pa-3 ma-1 square"
       height=120
